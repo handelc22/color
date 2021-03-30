@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 
 const EnterURL = ({ onChange, onSubmit }) => {
   return (
-    <form>
+    <div id='enter-url'>
+      <div>Enter the URL of the site you would like to style:</div>
       <input type='' onChange={onChange}></input>
-      <Link to='/style' onClick={onSubmit}>Submit</Link>
-    </form>
+      <Link className='button' to='/style' onClick={onSubmit}>Enter</Link>
+    </div>
   )
 }
 

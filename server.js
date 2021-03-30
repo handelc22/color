@@ -10,13 +10,8 @@ app.post('/', (req, res) => {
   const url = req.body.url;
   axios(url.slice(1, url.length - 1))
   .then(response => {
-    // return writeFile('./client/iframe.html', response.data)
-    console.log(response.data);
     res.status(200).send(JSON.stringify(response.data));
   })
-  // .then(() => {
-  //   res.sendStatus(200);
-  // })
   .catch(err => {
     console.log(err);
     res.status(500).send(err);

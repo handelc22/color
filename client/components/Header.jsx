@@ -10,8 +10,15 @@ class Header extends React.Component {
   }
 
   render() {
+    const name = '<color>'
     return (
-      <div>Header</div>
+      <>
+        <div id='header'>
+          <i className='fas fa-palette'></i>
+          <h1>{name}</h1>
+        </div>
+        <div id='fade'></div>
+      </>
     );
   }
 }
