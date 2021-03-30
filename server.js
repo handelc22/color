@@ -9,8 +9,13 @@ app.use(express.json());
 app.post('/', (req, res) => {
   const url = req.body.url;
   axios(url.slice(1, url.length - 1))
-  .then(response => {
-    res.status(200).send(JSON.stringify(response.data));
+  .then((response) => {
+    const splitURL = url.slice(1, url.length - 1).split('/');
+    const base = `${splitURL[0]}//${splitURL[2]}`;
+    console.log('baseURL:', base);
+    html = response.data.replace('<head>', `<head><base href=${base}></base>`);
+    writeFile('./client/iframe/main.html', html);
+    res.status(200).send(JSON.stringify(html));
   })
   .catch(err => {
     console.log(err);

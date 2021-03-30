@@ -1,19 +1,29 @@
-body, body * {
+body {
   margin: 0;
-  font-family: 'Raleway', sans-serif;
   background-color: #eee
 }
 
-/* Header */
+body * {
+  margin: 0;
+}
 
-#header, #fade {
+/* Header */
+.color-app {
+  font-family: 'Raleway', sans-serif;
+}
+
+.color-app#header, .color-app#fade {
   margin: 0;
   background: linear-gradient(135deg, rgb(247, 223, 164) 0%, hsla(325, 71%, 70%, 0.7) 50%, hsla(236, 67%, 55%, 0.5) 100%);
   text-align: center;
   height: 70px;
 }
 
-#fade {
+.color-app.name {
+  font-size: 30px !important;
+}
+
+.color-app#fade {
   position: absolute;
   height: 50px;
   top: 20px;
@@ -21,25 +31,25 @@ body, body * {
   background: linear-gradient(rgba(0, 0, 0, 0), #eee);
 }
 
-#header * {
+.color-app#header * {
   display: inline-block;
   margin: 0 10px;
   line-height: 50px;
   background-color: rgba(0, 0, 0, 0);
 }
 
-#header i {
+.color-app#header i.color-app {
   font-size: 25px;
 }
 
-#header h1 {
+.color-app#header h1.color-app {
   letter-spacing: 10px;
   font-weight: normal;
 }
 
 /* Enter URL */
 
-#enter-url {
+.color-app#enter-url {
   display: grid;
   grid-template-columns: 3fr minmax(auto, 1fr);
   grid-template-rows: auto 1fr;
@@ -51,26 +61,35 @@ body, body * {
   font-size: 20px;
 }
 
-#enter-url div {
+.color-app#enter-url div.color-app {
   grid-area: textarea;
 }
 
-#enter-url input {
+.color-app#enter-url input.color-app {
   grid-area: input;
   margin: 20px;
   height: 20px;
 }
 
-#enter-url .button {
+.color-app#enter-url .color-app.button {
   grid-area: button;
   margin: 20px;
   height: 20px;
-  width: 80px;
+  width: 50px;
   border: 1px solid black;
   border-radius: 10%;
-  background-color: #ddd;
+  color: #000;
+  background: linear-gradient(135deg, rgb(247, 223, 164) 0%, hsla(325, 71%, 70%, 0.3) 50%, hsla(236, 67%, 55%, 0.2) 100%);
   padding: 3px;
   font-size: 15px;
   text-decoration: none;
 }
 
+.color-app#iframe {
+  margin: auto;
+  width: 90% !important ;
+  height: 80vh !important;
+  overflow: scroll !important;
+  border: 2px solid #ccc;
+  padding: 2px;
+}

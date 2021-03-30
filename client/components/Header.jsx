@@ -13,11 +13,11 @@ class Header extends React.Component {
     const name = '<color>'
     return (
       <>
-        <div id='header'>
-          <i className='fas fa-palette'></i>
-          <h1>{name}</h1>
+        <div id='header' className='color-app'>
+          <i className='color-app fas fa-palette'></i>
+          <h1 className='color-app name'>{name}</h1>
         </div>
-        <div id='fade'></div>
+        <div id='fade' className='color-app'></div>
       </>
     );
   }

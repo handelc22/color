@@ -1,8 +1,12 @@
 import React from 'react';
+import ColorScheme from './ColorScheme.jsx';
 
 const Styling = ({ html }) => {
   return (
-    <div dangerouslySetInnerHTML={{ __html: html }}/>
+    <>
+      <ColorScheme />
+      <div id='iframe' className='color-app' dangerouslySetInnerHTML={{ __html: html }}/>
+    </>
   )
 }
 
