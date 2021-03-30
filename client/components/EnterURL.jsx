@@ -1,13 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const EnterURL = () => {
+const EnterURL = ({ onChange, onSubmit }) => {
   return (
     <form>
-      <input type=''></input>
-      <Link to='/style'>
-      Submit
-      </Link>
+      <input type='' onChange={onChange}></input>
+      <Link to='/style' onClick={onSubmit}>Submit</Link>
     </form>
   )
 }
