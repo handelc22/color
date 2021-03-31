@@ -103,7 +103,7 @@ body * {
   border: 2px solid #ccc;
   padding: 2px;
   position: absolute;
-  top: 240px;
+  top: 270px;
   left: 5%;
 }
 
@@ -112,18 +112,35 @@ body * {
 }
 
 .color-app.color-row {
-  margin-top: 20px;
+  margin-top: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .color-app.swatch {
-  width: 100px;
-  height: 80px;
+  width: 120px;
   text-align: center;
   display: inline-block;
   margin: 0 min(10%, 25px);
+}
+
+.color-app.selector {
+  margin-bottom: 6px;
+}
+
+.color-app.swatch .radio {
+  text-align: left;
+  margin-left: 8px;
+}
+
+.color-app.swatch label {
+  font-size: 12px;
+  margin-left: 3px;
+}
+
+.color-app.swatch i {
+  cursor: pointer;
 }
 
 .color-app.color {
@@ -146,7 +163,7 @@ body * {
   cursor: pointer;
   position: absolute;
   left: calc(50% - 100px);
-  top: 195px;
+  top: 220px;
   background-color: #ddd;
   width: 200px;
   border-radius: 5px;

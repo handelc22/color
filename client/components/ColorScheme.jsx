@@ -12,6 +12,8 @@ class ColorScheme extends React.Component {
     this.onClick = this.onClick.bind(this);
     this.getRandomColor = this.getRandomColor.bind(this);
     this.updateIframe = this.updateIframe.bind(this);
+    this.changeLock = this.changeLock.bind(this);
+    this.radioChange = this.radioChange.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +29,13 @@ class ColorScheme extends React.Component {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+
+  changeLock(e) {
+    var index = Number(e.target.getAttribute('index'));
+    var newLocks = this.state.locks;
+    newLocks[index] = !this.state.locks[index];
+    this.setState({ locks: newLocks });
   }
 
   updateIframe() {
@@ -62,16 +71,32 @@ class ColorScheme extends React.Component {
     this.updateIframe();
   }
 
+  radioChange(e) {
+    var newBackgroundOrText = this.state.backgroundOrText;
+    newBackgroundOrText[Number(e.target.name)] = e.target.value;
+    this.setState({ backgroundOrText: newBackgroundOrText });
+  }
+
   render() {
     return (
       <div className='color-app color-row'>
         {this.state.colors.map((color, index) => {
           return (
             <div className='color-app swatch' key={index}>
-              <div className='color-app'>{this.state.selectors[index]}</div>
+              <div className='color-app selector'>{this.state.selectors[index]}</div>
+
               <div className='color-app color' style={{ backgroundColor: `#${color}` }} key={color}>{`#${color}`}</div>
-              <div className='color-app'>{this.state.backgroundOrText[index]}</div>
-              {this.state.locks[index] ? <i class="color-app fas fa-lock"></i> : <i class="color-app fas fa-lock-open"></i>}
+
+              <div className='color-app radio'>
+                <input type='radio' id='background' name={index} value='background' checked={this.state.backgroundOrText[index] === 'background'}className='color-app' onChange={this.radioChange}/>
+                <label for='background'>background</label>
+                <br/>
+                <input type='radio' id='text' name={index} value='text' checked={this.state.backgroundOrText[index] === 'text'} className='color-app' onChange={this.radioChange}/>
+                <label for='text'>text</label>
+                <br/>
+              </div>
+
+              {this.state.locks[index] ? <i className="color-app fas fa-lock" index={index} onClick={this.changeLock}></i> : <i className="color-app fas fa-lock-open" index={index} onClick={this.changeLock}></i>}
             </div>
           )
         })}
