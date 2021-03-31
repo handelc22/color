@@ -65,17 +65,18 @@ class ColorScheme extends React.Component {
   render() {
     return (
       <div className='color-app color-row'>
-      {this.state.colors.map((color, index) => {
-        return (
-          <div className='color-app swatch' key={index}>
-            <div className='color-app'>{this.state.selectors[index]}</div>
-            <div className='color-app color' style={{ backgroundColor: `#${color}` }} key={color}>{`#${color}`}</div>
-            <div className='color-app'>{this.state.backgroundOrText[index]}</div>
-            {this.state.locks[index] ? <i class="color-app fas fa-lock"></i> : <i class="color-app fas fa-lock-open"></i>}
-          </div>
-        )
-      })}
-      <button className='color-app' onClick={this.onClick}>Generate Color Scheme</button>
+        {this.state.colors.map((color, index) => {
+          return (
+            <div className='color-app swatch' key={index}>
+              <div className='color-app'>{this.state.selectors[index]}</div>
+              <div className='color-app color' style={{ backgroundColor: `#${color}` }} key={color}>{`#${color}`}</div>
+              <div className='color-app'>{this.state.backgroundOrText[index]}</div>
+              {this.state.locks[index] ? <i class="color-app fas fa-lock"></i> : <i class="color-app fas fa-lock-open"></i>}
+            </div>
+          )
+        })}
+        <button className='color-app add-swatch'>+</button>
+        <button className='color-app generate-colors' onClick={this.onClick}>Generate Color Scheme</button>
       </div>
     )
   }

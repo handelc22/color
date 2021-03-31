@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background-color: #eee
+  background-color: #eee;
 }
 
 body * {
@@ -9,6 +9,7 @@ body * {
 
 /* Header */
 .color-app {
+  box-sizing: border-box;
   font-family: 'Raleway', sans-serif;
 }
 
@@ -53,38 +54,44 @@ body * {
 
 .color-app#enter-url {
   display: grid;
-  grid-template-columns: 3fr minmax(auto, 1fr);
+  grid-template-columns: 500px 50px;
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    'textarea textarea'
+    'textarea nothing'
     'input button';
-  margin: 20px 25%;
+  margin: 30px calc(50% - 250px);
   text-align: center;
   font-size: 20px;
 }
 
 .color-app#enter-url div.color-app {
   grid-area: textarea;
+  margin-bottom: 20px;
 }
 
 .color-app#enter-url input.color-app {
   grid-area: input;
-  margin: 20px;
-  height: 20px;
+  margin: 0 10px;
+  height: 25px;
+  width: 480px;
 }
 
 .color-app#enter-url .color-app.button {
   grid-area: button;
-  margin: 20px;
-  height: 20px;
-  width: 50px;
-  border: 1px solid black;
-  border-radius: 10%;
-  color: #000;
-  background: linear-gradient(135deg, rgb(247, 223, 164) 0%, hsla(325, 71%, 70%, 0.3) 50%, hsla(236, 67%, 55%, 0.2) 100%);
+  margin: 0;
+  height: 25px;
+  width: 30px;
+  border: 1px solid #888;
+  border-radius: 5%;
+  color: #333;
+  background-color: rgb(231, 228, 228);
   padding: 3px;
   font-size: 15px;
   text-decoration: none;
+}
+
+.color-app#enter-url .color-app.button:hover {
+  background-color: rgb(206, 205, 205);
 }
 
 .color-app#iframe {
@@ -105,6 +112,7 @@ body * {
 .color-app.color-row {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .color-app.swatch {
@@ -119,7 +127,18 @@ body * {
   line-height: 30px;
 }
 
-button.color-app {
+.color-app.add-swatch {
+  height: 20px;
+  width: 20px;
+  line-height: 20px;
+  cursor: pointer;
+  background-color: #ddd;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 0;
+}
+
+.color-app.generate-colors {
   margin: auto !important;
   cursor: pointer;
   position: absolute;
