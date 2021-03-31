@@ -86,10 +86,21 @@ body * {
 }
 
 .color-app#iframe {
-  margin: auto;
   width: 90% !important ;
   height: 80vh !important;
   overflow: scroll !important;
   border: 2px solid #ccc;
   padding: 2px;
+  position: absolute;
+  top: 200px;
+  left: 5%;
+}
+
+.color-app#iframe body {
+  background-color: blue;
+}
+
+.color-app.swatch {
+  width: 80px;
+  height: 80px;
 }

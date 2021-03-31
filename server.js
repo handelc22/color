@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const { writeFile } = require('fs/promises');
 const axios = require('axios');
 
 app.use(express.json());
@@ -14,7 +13,6 @@ app.post('/', (req, res) => {
     const base = `${splitURL[0]}//${splitURL[2]}`;
     console.log('baseURL:', base);
     html = response.data.replace('<head>', `<head><base href=${base}></base>`);
-    writeFile('./client/iframe/main.html', html);
     res.status(200).send(JSON.stringify(html));
   })
   .catch(err => {
