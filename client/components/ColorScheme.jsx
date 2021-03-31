@@ -14,11 +14,26 @@ class ColorScheme extends React.Component {
     this.updateIframe = this.updateIframe.bind(this);
     this.changeLock = this.changeLock.bind(this);
     this.radioChange = this.radioChange.bind(this);
+    this.changeSelector = this.changeSelector.bind(this);
+    this.addSwatch = this.addSwatch.bind(this);
   }
 
-  componentDidMount() {
+  componentDidUpdate() {
+    this.updateIframe();
+  }
+
+  addSwatch() {
+    var { colors, selectors, backgroundOrText, locks } = this.state;
     var randomColor = this.getRandomColor();
-    this.setState({ colors: [randomColor, 'fff'], selectors: ['body, body *', 'body, body *'], backgroundOrText: ['background', 'text'], locks: [false, true] });
+    var newColors = colors;
+    newColors.push(randomColor);
+    var newSelectors = selectors;
+    newSelectors.push('body, body *');
+    var newBackgroundOrText = backgroundOrText;
+    newBackgroundOrText.push('background');
+    var newLocks = locks;
+    newLocks.push(false);
+    this.setState({ colors: newColors, selectors: newSelectors, backgroundOrText: newBackgroundOrText, locks: newLocks });
     this.updateIframe();
   }
 
@@ -77,22 +92,43 @@ class ColorScheme extends React.Component {
     this.setState({ backgroundOrText: newBackgroundOrText });
   }
 
+  changeSelector(e) {
+    var index = Number(e.target.getAttribute('index'));
+    var newSelectors = this.state.selectors;
+    newSelectors[index] = e.target.innerHTML;
+    this.setState({ selectors: newSelectors });
+  }
+
   render() {
     return (
       <div className='color-app color-row'>
+        <span className='color-app mode-span'>mode: </span>
+        <select className='color-app mode' name='mode' id='mode'>
+          <option value='monochrome'>monochrome</option>
+          <option value='monochrome-dark'>monochrome-dark</option>
+          <option value='monochrome-light'>monochrome-light</option>
+          <option value='analogic'>analogic</option>
+          <option value='complement'>complement</option>
+          <option value='analogic-complement'>analogic-complement</option>
+          <option value='triad'>triad</option>
+          <option value='quad'>quad</option>
+        </select>
+
+        <button className='color-app generate-colors' onClick={this.onClick}>Generate Color Scheme</button>
+
         {this.state.colors.map((color, index) => {
           return (
             <div className='color-app swatch' key={index}>
-              <div className='color-app selector'>{this.state.selectors[index]}</div>
+              <div contentEditable='true' onKeyDown={this.changeSelector} index={index} className='color-app selector'>{this.state.selectors[index]}</div>
 
-              <div className='color-app color' style={{ backgroundColor: `#${color}` }} key={color}>{`#${color}`}</div>
+              <div contentEditable='true' className='color-app color' style={{ backgroundColor: `#${color}` }} key={color}>{`#${color}`}</div>
 
               <div className='color-app radio'>
                 <input type='radio' id='background' name={index} value='background' checked={this.state.backgroundOrText[index] === 'background'}className='color-app' onChange={this.radioChange}/>
-                <label for='background'>background</label>
+                <label htmlFor='background'>background</label>
                 <br/>
                 <input type='radio' id='text' name={index} value='text' checked={this.state.backgroundOrText[index] === 'text'} className='color-app' onChange={this.radioChange}/>
-                <label for='text'>text</label>
+                <label htmlFor='text'>text</label>
                 <br/>
               </div>
 
@@ -100,8 +136,9 @@ class ColorScheme extends React.Component {
             </div>
           )
         })}
-        <button className='color-app add-swatch'>+</button>
-        <button className='color-app generate-colors' onClick={this.onClick}>Generate Color Scheme</button>
+        <button onClick={this.addSwatch} className='color-app add-swatch'>
+          + Add Color
+        </button>
       </div>
     )
   }
