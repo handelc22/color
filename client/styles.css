@@ -10,7 +10,8 @@ body * {
 /* Header */
 .color-app {
   box-sizing: border-box;
-  font-family: 'Raleway', sans-serif;
+  /* font-family: 'Raleway', sans-serif; */
+  font-family: 'Kiwi Maru', serif;
 }
 
 .color-app#header, .color-app#fade {
@@ -67,6 +68,7 @@ body * {
 .color-app#enter-url div.color-app {
   grid-area: textarea;
   margin-bottom: 20px;
+  font-size: 18px;
 }
 
 .color-app#enter-url input.color-app {
@@ -85,8 +87,8 @@ body * {
   border-radius: 5%;
   color: #333;
   background-color: rgb(231, 228, 228);
-  padding: 3px;
   font-size: 15px;
+  line-height: 23px;
   text-decoration: none;
 }
 

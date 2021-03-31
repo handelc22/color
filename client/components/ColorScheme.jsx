@@ -16,7 +16,7 @@ class ColorScheme extends React.Component {
 
   componentDidMount() {
     var randomColor = this.getRandomColor();
-    this.setState({ colors: [randomColor, 'fff'], selectors: ['body', 'body'], backgroundOrText: ['background', 'text'], locks: [false, true] });
+    this.setState({ colors: [randomColor, 'fff'], selectors: ['body, body *', 'body, body *'], backgroundOrText: ['background', 'text'], locks: [false, true] });
     this.updateIframe();
   }
 
@@ -33,7 +33,7 @@ class ColorScheme extends React.Component {
     var { selectors, colors, backgroundOrText, locks } = this.state;
     var refreshIframe = () => {
       for (var i = 0; i < selectors.length; i++) {
-        if (selectors[i] === 'body') {
+        if (selectors[i] === 'body, body *') {
           if (backgroundOrText[i] === 'background') {
             document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('background', `#${this.state.colors[i]}`, 'important'));
           } else {
