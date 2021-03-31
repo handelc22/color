@@ -102,5 +102,18 @@ body * {
 
 .color-app.swatch {
   width: 80px;
-  height: 80px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+}
+
+button.color-app {
+  margin: auto !important;
+  cursor: pointer;
+  position: absolute;
+  left: calc(50% - 100px);
+  background-color: #ddd;
+  width: 200px;
+  border-radius: 5px;
+  /* left: */
 }

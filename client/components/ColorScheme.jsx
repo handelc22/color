@@ -8,14 +8,24 @@ class ColorScheme extends React.Component {
       colors: []
     }
     this.onClick = this.onClick.bind(this);
+    this.getRandomColor = this.getRandomColor.bind(this);
+  }
+
+  getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   onClick() {
-    var randomColor = Math.floor(Math.random()*16777215).toString(16);
-    this.setState({ colors: [randomColor], selectors: ['div'] });
+    var randomColor = this.getRandomColor();
+    this.setState({ colors: [randomColor], selectors: ['*'] });
     var timeout = () => {
       for (var i = 0; i < this.state.selectors.length; i++) {
-        document.querySelectorAll(`#iframe ${this.state.selectors[i]}`).forEach(element => element.style.background = `#${this.state.colors[i]}`);
+        document.querySelectorAll(`#iframe, #iframe ${this.state.selectors[i]}`).forEach(element => element.style.setProperty('background', `#${this.state.colors[i]}`, 'important'));
       }
     }
     setTimeout(timeout, 0);
@@ -24,8 +34,13 @@ class ColorScheme extends React.Component {
   render() {
     return (
       <>
-      {this.state.colors.map(color => {
-        return <div style={{ backgroundColor: `#${color}` }} key={color} className='color-app swatch'>{color}</div>
+      {this.state.colors.map((color, index) => {
+        return (
+          <div key={index}>
+            <div>{this.state.selectors[index]}</div>
+            <div style={{ backgroundColor: `#${color}` }} key={color} className='color-app swatch'>{color}</div>
+          </div>
+        )
       })}
       <button className='color-app' onClick={this.onClick}>Generate Color Scheme</button>
       </>

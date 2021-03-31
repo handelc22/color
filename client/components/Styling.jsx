@@ -12,7 +12,7 @@ class Styling extends React.Component {
       var find = $('*').each(function(index) {
         if ($(this).css('position') === 'fixed') {
           var top = $(this).css('top');
-          $(this).css({'top': `calc(${top} + 200px)`});
+          $(this).css({'top': `calc(${top} + 202px)`});
         }
       });
     }, 0);
