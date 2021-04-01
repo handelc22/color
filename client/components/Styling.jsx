@@ -21,7 +21,7 @@ class Styling extends React.Component {
   render() {
     return (
       <>
-        <ColorScheme />
+        <ColorScheme html={this.props.html}/>
         <div id='iframe' className='color-app' dangerouslySetInnerHTML={{ __html: this.props.html }}/>
       </>
     )

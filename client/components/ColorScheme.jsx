@@ -7,7 +7,10 @@ class ColorScheme extends React.Component {
       selectors: [],
       colors: [],
       backgroundOrText: [],
-      locks: []
+      locks: [],
+      selectorIndexChanging: null,
+      colorIndexChanging: null,
+      // originalFormatting: {}
     }
     this.onClick = this.onClick.bind(this);
     this.getRandomColor = this.getRandomColor.bind(this);
@@ -15,16 +18,84 @@ class ColorScheme extends React.Component {
     this.changeLock = this.changeLock.bind(this);
     this.radioChange = this.radioChange.bind(this);
     this.changeSelector = this.changeSelector.bind(this);
+    this.changeColor = this.changeColor.bind(this);
     this.addSwatch = this.addSwatch.bind(this);
+    this.closeSwatch = this.closeSwatch.bind(this);
+  }
+
+  componentDidMount() {
+    window.addEventListener('click', (e) => {
+      if (this.state.selectorIndexChanging !== null) {
+        var selectorChanging = document.querySelector(`.color-app.selector.index${this.state.selectorIndexChanging}`);
+        if (e.target !== selectorChanging) {
+          var newSelectors = this.state.selectors;
+          // var selectorToRevert = this.state.selectors[Number(this.state.selectorIndexChanging)];
+          // if (selectorToRevert === 'body, body *') {
+          //   if (this.state.backgroundOrText[Number(this.state.selectorIndexChanging)] === 'background') {
+          //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background}`));
+          //   } else {
+          //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color}`));
+          //   }
+          // } else {
+          //   if (this.state.backgroundOrText[Number(this.state.selectorIndexChanging)] === 'background') {
+          //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background}`));
+          //   } else {
+          //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color}`));
+          //   }
+          // }
+
+          newSelectors[Number(this.state.selectorIndexChanging)] = selectorChanging.innerHTML;
+          this.setState({ selectors: newSelectors, selectorIndexChanging: null });
+        }
+      }
+      if (this.state.colorIndexChanging !== null) {
+        var colorChanging = document.querySelector(`.color-app.color.index${this.state.colorIndexChanging}`);
+        if (e.target !== colorChanging) {
+          var newColors = this.state.colors;
+          console.log('test:', colorChanging.innerHTML);
+          newColors[Number(this.state.colorIndexChanging)] = colorChanging.innerHTML;
+          this.setState({ colors: newColors, colorIndexChanging: null });
+        }
+      }
+    });
   }
 
   componentDidUpdate() {
     this.updateIframe();
   }
 
+  updateIframe() {
+    var { selectors, colors, backgroundOrText, locks } = this.state;
+    var refreshIframe = () => {
+      for (var i = 0; i < selectors.length; i++) {
+        if (selectors[i] === 'body, body *') {
+          if (backgroundOrText[i] === 'background') {
+            document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('background', this.state.colors[i], 'important'));
+          } else {
+            document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('color', this.state.colors[i], 'important'));
+          }
+        } else {
+          if (backgroundOrText[i] === 'background') {
+            document.querySelectorAll(`#iframe ${this.state.selectors[i]}`).forEach(element => element.style.setProperty('background', this.state.colors[i], 'important'));
+          } else {
+            document.querySelectorAll(`#iframe ${this.state.selectors[i]}`).forEach(element => element.style.setProperty('color', this.state.colors[i], 'important'));
+          }
+        }
+      }
+    }
+    setTimeout(refreshIframe, 0);
+  }
+
   addSwatch() {
+    // if (JSON.stringify(this.state.originalFormatting) === '{}') {
+    //   var originalFormatting = {};
+    //   document.querySelectorAll('#iframe *').forEach(element => {
+    //     originalFormatting[element] = element.style;
+    //   });
+    //   this.setState({ originalFormatting });
+    // }
     var { colors, selectors, backgroundOrText, locks } = this.state;
-    var randomColor = this.getRandomColor();
+    var randomColor = `#${this.getRandomColor()}`;
     var newColors = colors;
     newColors.push(randomColor);
     var newSelectors = selectors;
@@ -53,32 +124,10 @@ class ColorScheme extends React.Component {
     this.setState({ locks: newLocks });
   }
 
-  updateIframe() {
-    var { selectors, colors, backgroundOrText, locks } = this.state;
-    var refreshIframe = () => {
-      for (var i = 0; i < selectors.length; i++) {
-        if (selectors[i] === 'body, body *') {
-          if (backgroundOrText[i] === 'background') {
-            document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('background', `#${this.state.colors[i]}`, 'important'));
-          } else {
-            document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('color', `#${this.state.colors[i]}`, 'important'));
-          }
-        } else {
-          if (backgroundOrText[i] === 'background') {
-            document.querySelectorAll(`#iframe ${this.state.selectors[i]}`).forEach(element => element.style.setProperty('background', `#${this.state.colors[i]}`, 'important'));
-          } else {
-            document.querySelectorAll(`#iframe ${this.state.selectors[i]}`).forEach(element => element.style.setProperty('color', `#${this.state.colors[i]}`, 'important'));
-          }
-        }
-      }
-    }
-    setTimeout(refreshIframe, 0);
-  }
-
   onClick() {
     var newColors = this.state.colors.map((color, index) => {
       if (!this.state.locks[index]) {
-        return this.getRandomColor();
+        return `#${this.getRandomColor()}`;
       }
       return color;
     })
@@ -94,9 +143,40 @@ class ColorScheme extends React.Component {
 
   changeSelector(e) {
     var index = Number(e.target.getAttribute('index'));
+    this.setState({ selectorIndexChanging: index });
+  }
+
+  changeColor(e) {
+    var index = Number(e.target.getAttribute('index'));
+    this.setState({ colorIndexChanging: index });
+  }
+
+  closeSwatch(e) {
+    var index = Number(e.target.getAttribute('index'));
+    // var selectorToRevert = this.state.selectors[index];
+    // var backgroundOrTextToRevert = this.state.backgroundOrText[index];
     var newSelectors = this.state.selectors;
-    newSelectors[index] = e.target.innerHTML;
-    this.setState({ selectors: newSelectors });
+    newSelectors.splice(index, 1);
+    var newColors = this.state.colors;
+    newColors.splice(index, 1);
+    var newBackgroundOrText = this.state.backgroundOrText;
+    newBackgroundOrText.splice(index, 1);
+    var newLocks = this.state.locks;
+    newLocks.splice(index, 1);
+    this.setState({ selectors: newSelectors, colors: newColors, backgroundOrText: newBackgroundOrText, locks: newLocks });
+    // if (selectorToRevert === 'body, body *') {
+    //   if (backgroundOrTextToRevert === 'background') {
+    //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background || '#fff'}`));
+    //   } else {
+    //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color || '#000'}`));
+    //   }
+    // } else {
+    //   if (backgroundOrTextToRevert === 'background') {
+    //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background}`));
+    //   } else {
+    //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color}`));
+    //   }
+    // }
   }
 
   render() {
@@ -119,9 +199,11 @@ class ColorScheme extends React.Component {
         {this.state.colors.map((color, index) => {
           return (
             <div className='color-app swatch' key={index}>
-              <div contentEditable='true' onKeyDown={this.changeSelector} index={index} className='color-app selector'>{this.state.selectors[index]}</div>
+              <div contentEditable='true' suppressContentEditableWarning='true' onClick={this.changeSelector} index={index} className={`color-app selector index${index}`}>{this.state.selectors[index]}</div>
 
-              <div contentEditable='true' className='color-app color' style={{ backgroundColor: `#${color}` }} key={color}>{`#${color}`}</div>
+              <button index={index} className='color-app close-swatch' onClick={this.closeSwatch}>X</button>
+
+              <div contentEditable='true' suppressContentEditableWarning='true' index={index} onClick={this.changeColor} className={`color-app color index${index}`} style={{ backgroundColor: color }} key={color}>{color}</div>
 
               <div className='color-app radio'>
                 <input type='radio' id='background' name={index} value='background' checked={this.state.backgroundOrText[index] === 'background'}className='color-app' onChange={this.radioChange}/>
