@@ -11,7 +11,7 @@ class ColorScheme extends React.Component {
       locks: [],
       selectorIndexChanging: null,
       colorIndexChanging: null,
-      mode: 'monochrome',
+      mode: 'random',
     }
     this.onClick = this.onClick.bind(this);
     this.getRandomColor = this.getRandomColor.bind(this);
@@ -106,45 +106,55 @@ class ColorScheme extends React.Component {
 
   onClick() {
     var mode = this.state.mode;
-    var count = this.state.locks.filter(lock => !lock).length;
-    var seed;
-    var seedIndex = this.state.locks.reduce((seedIndex, lock, index) => {
-      if (lock && !seedIndex) {
-        return index;
-      }
-      return seedIndex;
-    }, '');
-    if (seedIndex === '') {
-      seed = this.getRandomColor();
-    } else {
-      seed = this.state.colors[seedIndex].slice(1);
-    }
-    const data = { seed, mode, count };
-    axios({
-      method: 'post',
-      url: 'http://localhost:2000/colors',
-      data
-    })
-    .then(response => {
-      var newColors = response.data.colors.map(color => {
-        return color.hex.value;
-      })
-      var colorIndex = 0;
-      var colors = this.state.colors.map((color, index) => {
+    if (mode === 'random') {
+      var newColors = this.state.colors.map((color, index) => {
         if (!this.state.locks[index]) {
-          colorIndex++;
-          return newColors[colorIndex - 1];
+          return `#${this.getRandomColor()}`;
         }
         return color;
       })
-      return this.setState({ colors });
-    })
-    .then(() => {
-      this.updateIframe();
-    })
-    .catch(err => {
-      console.error(err);
-    })
+      this.setState({ colors: newColors });
+    } else {
+      var count = this.state.locks.filter(lock => !lock).length;
+      var seed;
+      var seedIndex = this.state.locks.reduce((seedIndex, lock, index) => {
+        if (lock && !seedIndex) {
+          return index;
+        }
+        return seedIndex;
+      }, '');
+      if (seedIndex === '') {
+        seed = this.getRandomColor();
+      } else {
+        seed = this.state.colors[seedIndex].slice(1);
+      }
+      const data = { seed, mode, count };
+      axios({
+        method: 'post',
+        url: 'http://localhost:2000/colors',
+        data
+      })
+      .then(response => {
+        var newColors = response.data.colors.map(color => {
+          return color.hex.value;
+        })
+        var colorIndex = 0;
+        var colors = this.state.colors.map((color, index) => {
+          if (!this.state.locks[index]) {
+            colorIndex++;
+            return newColors[colorIndex - 1];
+          }
+          return color;
+        })
+        return this.setState({ colors });
+      })
+      .then(() => {
+        this.updateIframe();
+      })
+      .catch(err => {
+        console.error(err);
+      })
+    }
   }
 
   radioChange(e) {
@@ -185,6 +195,7 @@ class ColorScheme extends React.Component {
       <div className='color-app color-row'>
         <span className='color-app mode-span'>mode: </span>
         <select className='color-app mode' name='mode' id='mode' onChange={this.changeMode}>
+          <option value='monochrome'>random</option>
           <option value='monochrome'>monochrome</option>
           <option value='monochrome-dark'>monochrome-dark</option>
           <option value='monochrome-light'>monochrome-light</option>
