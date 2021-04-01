@@ -3,6 +3,9 @@ const app = express();
 const path = require('path');
 const axios = require('axios');
 
+const cors = require('cors');
+app.use(cors());
+
 app.use(express.json());
 
 app.post('/', (req, res) => {
@@ -14,6 +17,19 @@ app.post('/', (req, res) => {
     console.log('baseURL:', base);
     html = response.data.replace('<head>', `<head><base href=${base}></base>`);
     res.status(200).send(JSON.stringify(html));
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).send(err);
+  })
+})
+
+app.post('/colors', (req, res) => {
+  const { seed, mode, count } = req.body;
+  const url = `http://thecolorapi.com/scheme?hex=${seed}&mode=${mode}&count=${count}`;
+  axios(url)
+  .then((response) => {
+    res.status(200).send(response.data);
   })
   .catch(err => {
     console.log(err);

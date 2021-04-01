@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 class ColorScheme extends React.Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class ColorScheme extends React.Component {
       locks: [],
       selectorIndexChanging: null,
       colorIndexChanging: null,
+      mode: 'monochrome',
     }
     this.onClick = this.onClick.bind(this);
     this.getRandomColor = this.getRandomColor.bind(this);
@@ -20,6 +22,7 @@ class ColorScheme extends React.Component {
     this.changeColor = this.changeColor.bind(this);
     this.addSwatch = this.addSwatch.bind(this);
     this.closeSwatch = this.closeSwatch.bind(this);
+    this.changeMode = this.changeMode.bind(this);
   }
 
   componentDidMount() {
@@ -102,14 +105,46 @@ class ColorScheme extends React.Component {
   }
 
   onClick() {
-    var newColors = this.state.colors.map((color, index) => {
-      if (!this.state.locks[index]) {
-        return `#${this.getRandomColor()}`;
+    var mode = this.state.mode;
+    var count = this.state.locks.filter(lock => !lock).length;
+    var seed;
+    var seedIndex = this.state.locks.reduce((seedIndex, lock, index) => {
+      if (lock && !seedIndex) {
+        return index;
       }
-      return color;
+      return seedIndex;
+    }, '');
+    if (seedIndex === '') {
+      seed = this.getRandomColor();
+    } else {
+      seed = this.state.colors[seedIndex].slice(1);
+    }
+    const data = { seed, mode, count };
+    axios({
+      method: 'post',
+      url: 'http://localhost:2000/colors',
+      data
     })
-    this.setState({ colors: newColors });
-    this.updateIframe();
+    .then(response => {
+      var newColors = response.data.colors.map(color => {
+        return color.hex.value;
+      })
+      var colorIndex = 0;
+      var colors = this.state.colors.map((color, index) => {
+        if (!this.state.locks[index]) {
+          colorIndex++;
+          return newColors[colorIndex - 1];
+        }
+        return color;
+      })
+      return this.setState({ colors });
+    })
+    .then(() => {
+      this.updateIframe();
+    })
+    .catch(err => {
+      console.error(err);
+    })
   }
 
   radioChange(e) {
@@ -141,11 +176,15 @@ class ColorScheme extends React.Component {
     this.setState({ selectors: newSelectors, colors: newColors, backgroundOrText: newBackgroundOrText, locks: newLocks });
   }
 
+  changeMode(e) {
+    this.setState({ mode: e.target.value });
+  }
+
   render() {
     return (
       <div className='color-app color-row'>
         <span className='color-app mode-span'>mode: </span>
-        <select className='color-app mode' name='mode' id='mode'>
+        <select className='color-app mode' name='mode' id='mode' onChange={this.changeMode}>
           <option value='monochrome'>monochrome</option>
           <option value='monochrome-dark'>monochrome-dark</option>
           <option value='monochrome-light'>monochrome-light</option>
