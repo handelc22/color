@@ -10,7 +10,6 @@ class ColorScheme extends React.Component {
       locks: [],
       selectorIndexChanging: null,
       colorIndexChanging: null,
-      // originalFormatting: {}
     }
     this.onClick = this.onClick.bind(this);
     this.getRandomColor = this.getRandomColor.bind(this);
@@ -29,21 +28,6 @@ class ColorScheme extends React.Component {
         var selectorChanging = document.querySelector(`.color-app.selector.index${this.state.selectorIndexChanging}`);
         if (e.target !== selectorChanging) {
           var newSelectors = this.state.selectors;
-          // var selectorToRevert = this.state.selectors[Number(this.state.selectorIndexChanging)];
-          // if (selectorToRevert === 'body, body *') {
-          //   if (this.state.backgroundOrText[Number(this.state.selectorIndexChanging)] === 'background') {
-          //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background}`));
-          //   } else {
-          //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color}`));
-          //   }
-          // } else {
-          //   if (this.state.backgroundOrText[Number(this.state.selectorIndexChanging)] === 'background') {
-          //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background}`));
-          //   } else {
-          //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color}`));
-          //   }
-          // }
-
           newSelectors[Number(this.state.selectorIndexChanging)] = selectorChanging.innerHTML;
           this.setState({ selectors: newSelectors, selectorIndexChanging: null });
         }
@@ -87,13 +71,6 @@ class ColorScheme extends React.Component {
   }
 
   addSwatch() {
-    // if (JSON.stringify(this.state.originalFormatting) === '{}') {
-    //   var originalFormatting = {};
-    //   document.querySelectorAll('#iframe *').forEach(element => {
-    //     originalFormatting[element] = element.style;
-    //   });
-    //   this.setState({ originalFormatting });
-    // }
     var { colors, selectors, backgroundOrText, locks } = this.state;
     var randomColor = `#${this.getRandomColor()}`;
     var newColors = colors;
@@ -153,8 +130,6 @@ class ColorScheme extends React.Component {
 
   closeSwatch(e) {
     var index = Number(e.target.getAttribute('index'));
-    // var selectorToRevert = this.state.selectors[index];
-    // var backgroundOrTextToRevert = this.state.backgroundOrText[index];
     var newSelectors = this.state.selectors;
     newSelectors.splice(index, 1);
     var newColors = this.state.colors;
@@ -164,19 +139,6 @@ class ColorScheme extends React.Component {
     var newLocks = this.state.locks;
     newLocks.splice(index, 1);
     this.setState({ selectors: newSelectors, colors: newColors, backgroundOrText: newBackgroundOrText, locks: newLocks });
-    // if (selectorToRevert === 'body, body *') {
-    //   if (backgroundOrTextToRevert === 'background') {
-    //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background || '#fff'}`));
-    //   } else {
-    //     document.querySelectorAll('#iframe, #iframe *').forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color || '#000'}`));
-    //   }
-    // } else {
-    //   if (backgroundOrTextToRevert === 'background') {
-    //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('background', `${this.state.originalFormatting[element].background}`));
-    //   } else {
-    //     document.querySelectorAll(`#iframe ${selectorToRevert}`).forEach(element => element.style.setProperty('color', `${this.state.originalFormatting[element].color}`));
-    //   }
-    // }
   }
 
   render() {
